@@ -1,0 +1,464 @@
+\documentclass{article}[12pt]
+\usepackage{amsmath,amsthm}
+\usepackage{amssymb}
+\usepackage{lipsum}
+\usepackage{stmaryrd}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[bulgarian]{babel}
+\usepackage[normalem]{ulem}
+\usepackage{xcolor}
+
+\newcommand{\Lang}{\mathcal{L}}
+
+\setlength{\parindent}{0mm}
+
+\title{Синтаксис и семантика на език на предикатното смятане от първи ред}
+\author{Иво Стратев}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\vspace{1cm}
+
+Предстои да бъде въведен един формален език.
+Този език ще има напълно недвусмислен синтаксис и ясна семантика.
+Една от целите ни с такъв език ще бъде да описваме (говорим) и работим в различни светове.
+Мета език е езика, който използваме за да опишем формалния (обектния) език.
+
+\section{Забележки}
+
+Смятам, че използването на различи цветове ще помогне в разбирането и осмислянето на нещата,
+защото ще послужи за ясно разграничаване между обектен език и мета език.
+За това ще използва три цвята вместо един.
+
+\begin{itemize}
+\item В \color{cyan}син \color{black}цвят ще бъдат оцветявани буквите (символитите) от азбуката/ите.
+Тоест например \(\color{cyan}{(}\) ще бъде буквата лява отваряща кръгла скоба.
+\item В \color{red}червен \color{black}цвят ще бъдат оцветявани символи,
+чието значние ще бъде или символ или редици от бувки (символи).
+Целта е да е по-ясно, че използвайки тези символи за строене на думи ще имаме предвид,
+че те биват заместени синтактично в строените думи или че значението на даден обект е символ.
+Така например ако \(\color{red}\varphi \color{black}= \color{cyan}f(x)\),
+то \(\color{cyan}s(\color{red}\varphi\color{cyan}, c) \color{black} = \color{cyan} s(f(x), c)\).
+Ако пък кажем \(\color{red} \alpha \color{black} \in \{ \color{cyan} a \color{black}, \color{cyan} b \color{black}, \dots \} \),
+то ще разбираме, че \(\color{red} \alpha\) е някой от символите (буквите) \(\color{cyan} a \color{black} , \color{cyan} b \color{black}, \dots\).
+\item В черен цвят ще бъдат всички останали символи, които интерпретираме по стандартния за нас начин.
+Тоест в черен цвят ще бъде всичко от мета езика, който за нас ще бъде българския език, смесен с езика на математиката,
+който сме развили до момента (възприели до сега). 
+\end{itemize}
+
+Също така смятам, че използването на различни скоби би улеснило
+разчитането на "дълги" формули, когато не е въведен приоритет на съждителните връзки.
+
+\vspace{0.5cm}
+
+И така сега ще кажем какво значи един език \(\Lang\) да бъде език на предикатното смятане от първи ред.
+
+\section{Синтаксис}
+
+\subsection{Логическа част}
+
+Състои се от следните азбуки (множества от символи):
+
+\begin{itemize}
+\item азбука на съждителните връзки
+\(\{\color{cyan}\lnot \color{black}, \color{cyan} \lor \color{black} , \color{cyan} \& \color{black} , \color{cyan}\implies \color{black} , \color{cyan}\iff \color{black} \}\);
+\item азбука на кванторите
+\(\{\color{cyan}\exists \color{black}, \color{cyan} \forall \color{black} \}\);
+\item азбука на помощните символи
+\(\{\color{cyan} [ \color{black}, \color{cyan} < \color{black} , \color{cyan} ( \color{black} , \color{cyan} , \color{black} , \color{cyan} ) \color{black} , \color{cyan} > \color{black} , \color{cyan} ] \color{black} \}\);
+\item азбука на (обектовите/индивидните) променливи \(Var_\Lang\) \\
+(изброимо множество от символи). 
+Обикновенно за нас елементи на това множество ще бъдат буквите \(\color{cyan} x \; y \; z \; w\) с или без индекси.
+Например напълно възможно е \(Var_\Lang = \{\color{cyan} x \color{black}, \color{cyan} y \color{black} , \color{cyan} z \color{black} , \color{cyan} x_\pi \color{black} , \color{cyan} y_{\frac{325}{66}} \color{black} , \color{cyan} z_{\epsilon} \color{black} \}\);
+\item езика \(\Lang\) е възможно да съдържа, но не е задължително да съдържа символ \(\color{cyan}\doteq\),
+който ще наричаме символ за формално равенство.
+\end{itemize}
+
+\subsection{Нелогическа част}
+
+Състои се от следните азбуки (множества от символи, всяко от които е изброимо):
+
+\begin{itemize}
+\item множество на константните символи \(Const_\Lang\)
+Обикновенно за нас елементи на това множество ще бъдат буквите \(\color{cyan} a \; b \; c \; d \) с или без индекси.
+Например напълно възможно е \(Const_\Lang = \{\color{cyan} a \color{black}, \color{cyan} b \color{black} , \color{cyan} c \color{black} , \color{cyan} d_\pi \color{black} , \color{cyan} a_{2} \color{black} , \color{cyan} b_{\epsilon} \color{black} \}\);
+\item множество на функционалните символи \(Func_\Lang\)
+Обикновенно за нас елементи на това множество ще бъдат буквите \(\color{cyan} f \; g \; h \) с или без индекси.
+Например напълно възможно е \(Func_\Lang = \{\color{cyan} f \color{black}, \color{cyan} g \color{black} , \color{cyan} h \color{black} , \color{cyan} f_\pi \color{black} , \color{cyan} g_{2} \color{black} , \color{cyan} h_{\epsilon} \color{black} \}\);
+\item множество на предикатите символи \(Pred_\Lang\)
+Обикновенно за нас елементи на това множество ще бъдат буквите \(\color{cyan} p \; q \; r \; t \) с или без индекси.
+Например напълно възможно е \(Pred_\Lang = \{\color{cyan} p \color{black}, \color{cyan} q \color{black} , \color{cyan} r \color{black} , \color{cyan} t_\pi \color{black} , \color{cyan} p_{2} \color{black} , \color{cyan} q_{\epsilon} \color{black} \}\).
+\end{itemize}
+
+\subsection{Арност}
+
+Арност ще наричаме функция \(\#_{(\_)} \; : \; Func_\Lang \cup Pred_\Lang \to \mathbb{N} \setminus \{0\} \).
+Тази функция за нас неформално ще ни казва броя на аргументите на всеки функционален и предикатен символ.
+Което като програмисти ще значи, че забраняваме претоварването (overloading) на символите нещо, с което сме свикнали от езика C++ .
+Това е с цел наше улеснение, не обратното :) .
+
+\subsection{Сигнатура}
+
+Сигнатура на езика \(\Lang\) ще наричаме множеството
+\begin{align*}
+Const_\Lang \cup Func_\Lang \cup Pred_\Lang \; ( \; \cup \; \{ \color{cyan} \doteq  \color{black} \} \; )
+\end{align*}
+
+Може би най-близкото за нас нещо до сигнатура е интерфейс (абстрактен клас) (Type class) от програмирането.
+
+\subsection{Пример до тук}
+
+Нека \(\Lang\) включва формално равенство и още нека:
+
+\begin{itemize}
+\item \(Const_\Lang = \{\color{cyan}a \color{black}, \color{cyan} b \color{black} \}\);
+\item \(Func_\Lang = \{\color{cyan}f \color{black}, \color{cyan} g \color{black} \}\);
+\item \(Pred_\Lang = \emptyset\).
+\end{itemize}
+
+Света, в който бихме искали да работим (да опишем) е някой конкретен пръстен.
+Тогава \(\#\color{cyan}f \color{black} = \#\color{cyan}g \color{black} = 2\) и сигнатурата в случая е множеството
+\(\{\color{cyan}a \color{black}, \color{cyan} b \color{black} , \color{cyan} f \color{black} , \color{cyan} g \color{black} , \color{cyan} \doteq \color{black} \}\).
+
+Предстои ни да се сблъскаме с понятието терм,
+което не е нищо друго от име за обект от света,
+в който желаем да работим/опишем.
+Какво е терм ще дефинираме индуктивно.
+
+\subsection{Терм}
+
+База:
+
+\begin{itemize}
+\item \((\forall \color{red} \chi \color{black} \in Var_\Lang)[\color{red} \chi \color{black} \in Term_\Lang]\) (всяки символ за променлива е терм);
+\item \((\forall \color{red} c \color{black} \in Const_\Lang)[\color{red} c \color{black} \in Term_\Lang]\) (всяки символ за константа е терм);
+\end{itemize}
+
+Имаме единствено правило чрез което да конструираме нови термове от вече получени такива.
+
+\vspace{0.5cm}
+
+Ако \(\color{red} \delta \color{black} \in Func_\Lang\) и \(\color{red}\tau_1\) е терм, \(\dots\), \(\color{red}\tau_{\color{black}\#\color{red}\delta}\) е терм, то
+\(\color{red} \delta \color{cyan} (\color{red}\tau_1 \color{cyan} , \color{black} \dots \color{cyan} , \color{red} \tau_{\color{black}\#\color{red}\delta} \color{cyan} )\) също е терм.
+(символичното прилагане на функционален символ към термове е терм).
+
+\vspace{0.5cm}
+
+Термове получени чрез горното правило могат да бъдат получени само след краен брой пъти неговото прилагане.
+
+\vspace{0.5cm}
+
+Множеството на термовете от езика \(\Lang\) ще означаваме с \(Term_\Lang\).
+
+\subsubsection{Примери}
+
+Надграждаме примера, който разглеждахме като искаме \(Var_\Lang = \{\color{cyan} x \color{black}, \color{cyan} y \color{black} , \color{cyan} z \color{black} \}\).
+Тогава следните редици от символи са термове:
+
+\begin{itemize}
+\item \(\color{cyan}a\);
+\item \(\color{cyan}b\);
+\item \(\color{cyan}x\);
+\item \(\color{cyan}y\);
+\item \(\color{cyan}f(a, b)\);
+\item \(\color{cyan}f(a, g(b, b))\);
+\item \(\color{cyan}f(f(g(b, a), b), g(a, a))\).
+\end{itemize}
+
+\subsection{Атомарна формула}
+
+Ако \(\color{red}\rho \color{black} \in Pred_\Lang\) и \(\color{red}\tau_1\), \(\dots\), \(\color{red}\tau_{\color{black}\#\color{red}\rho}\) са термове,
+то \(\color{red}\rho \color{cyan} < \color{red} \tau_1 \color{cyan} , \color{black} \dots \color{cyan} , \color{red} \tau_{\color{black}\#\color{red}\rho} \color{cyan} >\)
+е атомарна формула.
+
+\vspace{0.5cm}
+
+Ако \(\Lang\) е с формално равенство и \(\color{red} \alpha\) е терм и \(\color{red} \beta\) е терм,
+то \(\color{cyan} < \color{red} \alpha \color{cyan} \doteq \color{red} \beta \color{cyan} >\) също е атомарна формула.
+
+\vspace{0.5cm}
+
+Сега ще дефинираме напълно формално, какво ще означава за нас формула.
+
+\subsection{Формула}
+
+База: Всяка атомарна формула е формула.
+
+Можем да конструираме нови формули от други формули
+чрез краен брой прилагания на следите три правила:
+
+\begin{itemize}
+\item Ако \(\color{red} \varphi\) е формула,
+то \(\color{cyan} [ \neg \color{red} \varphi \color{cyan} ]\) е формула;
+\item Ако \(\color{red} \varphi\) е формула,
+\(\color{red} \psi\) е формула и \(\color{red} \sigma \color{black} \in \{\color{cyan} \lor \color{black} , \color{cyan} \& \color{black} , \color{cyan}\implies \color{black} , \color{cyan}\iff \color{black} \}\),
+то \(\color{cyan} [ \color{red} \varphi \sigma \psi \color{cyan} ]\) е формула;
+\item Ако \(\color{red} \varphi\) е формула, \(\color{red} \chi \color{black} \in Var_\Lang\) и \(\color{red} \Lambda \color{black} \in \{\color{cyan} \exists \color{black} , \color{cyan} \forall \color{black} \}\),
+то \(\color{cyan} [ \color{red} \Lambda \chi \varphi \color{cyan} ]\) е формула.
+\end{itemize}
+
+Множеството от формули от езика \(\Lang\) ще бележим с \(\mathcal{F}_\Lang\).
+
+\subsubsection{Примери}
+
+Надграждаме още примера за пръстен. Следните думи са формули:
+
+\begin{itemize}
+\item \(\color{cyan} < x \doteq x >\);
+\item \(\color{cyan} < a \doteq y >\);
+\item \(\color{cyan} [\lnot < a \doteq y > ]\);
+\item \(\color{cyan} [ < f(a, b) \doteq x > \& < g(x, y) \doteq y > ]\);
+\item \(\color{cyan} [\forall x < x \doteq x > ]\);
+\item \(\color{cyan} [\exists x < x \doteq x > ]\);
+\item \(\color{cyan} [ [\forall x < x \doteq x > ] \implies [ < f(g(a, y), x) \doteq x > \& < g(x, y) \doteq y > ] ]\);
+\item \(\color{cyan} [\forall x [\exists y <f(x, y) \doteq a>]]\).
+\end{itemize}
+
+Така вече можем да кажем, че думите от език на предикатното смятане от първи са формулите от този език.
+
+\section{Семантика}
+
+Няма как да дефинираме семантика без да кажем какво значи всеки символ от езика
+(как да го интерпретираме).
+И така първо ще дефиираме понятието структура.
+
+\subsection{Структура}
+Структура за нас ще бъде наредена двойка \((A, I)\), за която
+
+\begin{itemize}
+\item \(A\) е непразно множество, което ще наримаче универсум, домей или носител на структурата;
+\item \(I\) ще е изображение, което ще наричаме интерпретация;
+\item Ако \(\color{red} \epsilon \color{black} \in Const_\Lang\),
+то \(I(\color{red} \epsilon \color{black}) \in A\) (интерпретацията на всеки символ за константа е фиксиран елемент на носителя);
+\item Ако \(\color{red} \pi \color{black} \in Func_\Lang\),
+то \(I(\color{red} \pi \color{black}) \; : A^{\#\color{red} \pi} \color{black} \to A\) (интерпретацията на всеки функционален символ е функция между носителя на степен арността на функционалния символ и носителя);
+\item Ако \(\color{red} \rho \color{black} \in Pred_\Lang\),
+то \(I(\color{red} \rho \color{black}) \; \subseteq A^{\#\color{red} \rho}\) (интерпретацията на всеки предикатен символ е релация с домейн носителя на степен арността на предикатния символ);
+\end{itemize}
+
+Неформално можем да кажем, че интерпретацията на всеки:
+
+\begin{itemize}
+\item символ за константа е константа;
+\item функционален символ е функция;
+\item предикатен символ е релация.
+\end{itemize}
+
+Обикновенно за структурите ще ползваме голяма ръкописна буква,
+а за носителя/универсума на структурата голяма печатна буква.
+
+\vspace{0.3cm}
+
+Тоест в случая \(\mathcal{A} = (A, I)\).
+
+\vspace{0.3cm}
+
+И ако имаме структура \(\mathcal{A}\),
+то нейния носител ще означаваме с \(|\mathcal{A}|\).
+
+\vspace{0.3cm}
+
+Също така ако \(\color{red} \xi \color{black} \in Const_\Lang \cup Func_\Lang \cup Pred_\Lang\),
+то вместо \(I(\color{red} \xi \color{black})\) ще ползваме означението \(\color{red}\xi \color{black} ^{\mathcal{A}}\).
+
+\subsubsection{Пример}
+
+Разширяваме още примера, който разглеждаме.
+
+Една структура за еика, който разглеждаме е следната:
+
+\begin{itemize}
+\item \(\mathcal{A} = (\mathbb{Z}, I)\);
+\item \(I(\color{cyan} a \color{black}) = \color{cyan} a \color{black}^{\mathcal{A}} = 0_\mathbb{Z}\);
+\item \(I(\color{cyan} b \color{black}) = \color{cyan} b \color{black}^{\mathcal{A}} = 1_\mathbb{Z}\);
+\item \(I(\color{cyan} f \color{black}) = \color{cyan} f \color{black}^{\mathcal{A}} = +_\mathbb{Z}\);
+\item \(I(\color{cyan} g \color{black}) = \color{cyan} g \color{black}^{\mathcal{A}} = ._\mathbb{Z}\).
+\end{itemize}
+
+За да дефинираме семантиката на \(Lang\) ще ни трябва да кажем какво значи да оценим една променлива.
+Идея, с която до болка сме привикнали когато пишем програми.
+Надявам се всеки е запознат с начина за оценяване в езика Scheme (Racket) - модела на средите.
+Ще се опитаме да формализираме този модел.
+
+\subsection{Оценка}
+
+Оценка в универсума на една структура \(\mathcal{A}\) на променливите от езика \(\Lang\)
+ще наричаме функция \(\nu \; : \; Var_\Lang \to |\mathcal{A}| \).
+
+\vspace{0.3cm}
+
+Нека разширим оценката, до функция над термове.
+
+\subsection{Стойност на терм}
+
+Нека рекурсивно дефинираме разширената функция
+
+\(\$ \; (\_) \; \$^{\mathcal{A}}_\nu \; : \; Term_\Lang \to |\mathcal{A}|\)
+по следния начин:
+
+\begin{itemize}
+\item \((\forall \color{red} \chi \color{black} \in Var_\Lang)[\; \$ \; \color{red} \chi \color{black} \; \$^{\mathcal{A}}_\nu \overset{def}{=} \nu(\color{red} \epsilon \color{black}) \; ]\);
+\item \((\forall \color{red} \epsilon \color{black} \in Const_\Lang)[\; \$ \; \color{red} \epsilon \color{black} \; \$^{\mathcal{A}}_\nu \overset{def}{=} \color{red} \epsilon \color{black}^{\mathcal{A}} \; ]\);
+\item Ако \(\color{red} \pi \color{black} \in Func_\Lang, \color{red}  \tau_1 \color{black} \in Term_\Lang, \dots, \color{red} \tau_{\color{black} \# \color{red} \pi} \color{black} \in Term_\Lang\), то \\
+\(\$ \; \color{red} \pi  \color{cyan} ( \color{red} \tau_1 \color{cyan} , \color{black} \dots \color{cyan} , \color{red} \tau_{\color{black} \# \color{red} \pi} \color{cyan} ) \color{black} \; \$^{\mathcal{A}}_\nu \overset{def}{=} \color{red} \pi \color{black}^{\mathcal{A}}( \$ \; \color{red} \tau_1 \color{black} \; \$^{\mathcal{A}}_\nu, \dots , \$ \; \color{red} \tau_{\color{black} \# \color{red} \pi} \color{black} \; \$^{\mathcal{A}}_\nu  )\).
+\end{itemize}
+
+\subsubsection{Пример}
+Нека пресметнем стойостта на следния терм
+\begin{align*}
+\color{cyan} g(f(b, x), y)
+\end{align*}
+
+в структурата \(\mathcal{A}\) от предния пример,
+при оценка \(\nu \; : \; \{\color{cyan} x \color{black}, \color{cyan} y \color{black} , \color{cyan} z \color{black} \} \to \mathbb{Z}\),
+за която \(\nu(\color{cyan} x \color{black}) = 3, \; \nu(\color{cyan} y \color{black}) = -5, \; \nu(\color{cyan} z \color{black}) = 7\).
+
+\begin{align*}
+\$ \; \color{cyan}g(f(b, x), y) \color{black} \; \$^{\mathcal{A}}_\nu = \\
+\color{cyan} g \color{black} ^{\mathcal{A}}(\$ \; \color{cyan} f(b, x) \color{black} \; \$^{\mathcal{A}}_\nu, \$ \; \color{cyan} y \color{black} \; \$^{\mathcal{A}}_\nu ) = \\
+._\mathbb{Z}(\color{cyan} f \color{black} ^{\mathcal{A}}(\$ \; \color{cyan} b \color{black} \; \$^{\mathcal{A}}_\nu, \$ \; \color{cyan} x \color{black} \; \$^{\mathcal{A}}_\nu ), \nu(\color{cyan} y \color{black})) = \\
+._\mathbb{Z}(+_\mathbb{Z}(\color{cyan} b \color{black} ^{\mathcal{A}} , \nu(\color{cyan} x \color{black}), -5) = \\
+._\mathbb{Z}(+_\mathbb{Z}(1,  3) , -5) =  \\
+._\mathbb{Z}(4, -5) = \\
+-20
+\end{align*}
+
+\subsection{Модифицирана оценка}
+
+За да разберем, защо ще се нуждаем от следващата дефиниция
+нека разгледаме следния израз на езика Scheme
+\begin{align*}
+\color{blue}
+((lambda \; (x) \; (+ \; x \; ((lambda \; (x) \; (* \; x \; 3)) \; 2))) \; 5)
+\end{align*}
+
+Горният израз по стойност е еквивалентен със следния математически
+\begin{align*}
+(x + (3x)(2))(5)
+\end{align*}
+
+И сега може би е по-ясно, че при пресмятането на израза \(3x\),
+е в сила \(x = 2\), а във външното пресмятане е в сила \(x = 5\). 
+
+\vspace{0.5cm}
+
+Ако сега разгледаме формулата
+\begin{align*}
+\color{cyan}
+[[\exists x <x \doteq b>] \; \& \; [\exists x <x \doteq a>]]
+\end{align*}
+
+Без да сме въвели какво значи семантика на формула нека кажем неформално,
+че искаме семантиката на една формула да е нейната вярност в света, в който я разглеждаме.
+
+\vspace{0.5cm}
+
+И така ако искаме разглежданата формула да е вярна в пръстена, който образуват целите числа,
+тоест в света, който разглеждаме в примерите.
+То бихме искали да е истина следното изречение на български:
+Същесвува цяло число \(x\), равно на цялото число 1 и същесвува цяло число \(x\), равно на цялото число 0.
+Ясно е че това е вярно и в първия случай \(x\) е 1 във втория 0.
+
+\vspace{0.5cm}
+
+Ясно е, че се нуждаем от начин да "свързваме" стойност с променлива при разглеждането на формула или подформула. 
+Тоест трябва ни начин, по който да моделираме промяна на оценката на дадена формула.
+
+\vspace{0.5cm}
+
+Въвеждаме понятието модифицирана оценка.
+Ако имаме една оценка \(\nu\) и променлива \(\color{red} \chi\) и искаме нейната оценка да е \(a\),
+който е фиксиран елемент на универсума на структурата, която разглеждаме.
+То \(\nu^{\color{red} \chi}_{\color{black} a}\) е модифицираната оценка на \(\nu\),
+която оценява \(\color{red} \chi\) с \(a\). Тоест
+
+\begin{align*}
+\nu^{\color{red} \chi}_{\color{black} a} (\color{red} \gamma \color{black}) = \begin{cases}
+ a , \;\; \color{red} \gamma \color{black} = \color{red} \chi \color{black} \\
+\nu(\color{red} \gamma \color{black}) , \;\; \color{red} \gamma \color{black} \neq \color{red} \chi \color{black}
+\end{cases}
+\end{align*}
+
+\subsubsection{Пример}
+
+Ако модефицираме стойността на променливата \(\color{cyan} y\) да бъде \(5\) в предния пример,
+ще получим
+
+\begin{align*}
+\displaystyle{\$ \; \color{cyan}g(f(b, x), y) \color{black} \; \$^{\mathcal{A}}_{\nu^{\color{cyan} y}_{\color{black} 5}}} = 20
+\end{align*}
+
+\subsection{Една последна дефиниця преди въвеждането на Семантика}
+Нека означаваме константите "истина" с И и "лъжа" с Л.
+
+
+Нека \(h_{\neg}, h_{\lor}, h_{\&}, h_{\implies}, h_{\iff}\) са стандартните булеви функции: негация, дизюнкция, конюнкция, импликация и биимпликация.
+
+И нека \(Eval \; : \; \{\color{cyan}\lnot \color{black}, \color{cyan} \lor \color{black} , \color{cyan} \& \color{black} , \color{cyan}\implies \color{black} , \color{cyan}\iff \color{black} \} \to \{h_{\neg}, h_{\lor}, h_{\&}, h_{\implies}, h_{\iff}\} \),
+която на символ съпоставя съответната булева функция. Тоест
+
+\begin{align*}
+Eval(\color{cyan} \neg \color{black}) = h_{\neg} \\
+Eval(\color{cyan} \lor \color{black}) = h_{\lor} \\
+Eval(\color{cyan} \& \color{black}) = h_{\&} \\
+Eval(\color{cyan} \implies \color{black}) = h_{\implies} \\
+Eval(\color{cyan} \iff \color{black}) = h_{\iff}
+\end{align*}
+
+\subsection{Семантика на формула в структура \(\mathcal{A}\) за езика (отговаряща на сигнатурата на езика) при оценка \(\nu\)}
+
+Дефинираме функция \( \| \; (\_) \; \|^{\mathcal{A}}_{\nu} \; : \; \mathcal{F}_\Lang \to \{\text{И}, \text{Л}\} \) по следните правила:
+
+\begin{itemize}
+\item Ако \(\rho \color{black} \in Pred_\Lang, \color{red} \tau_1 \color{black} \in Term_\Lang, \dots, \color{red} \tau_{\color{black}\#\color{red}\rho} \color{black} \in Term_\Lang\), то \\
+\(\| \; \color{red}\rho \color{cyan} < \color{red} \tau_1 \color{cyan} , \color{black} \dots \color{cyan} , \color{red} \tau_{\color{black}\#\color{red}\rho} \color{cyan} > \color{black} \; \|^{\mathcal{A}}_{\nu} = \text{И} \iff (\$ \; \color{red} \tau_1 \color{black}  \; \$^{\mathcal{A}}_{\nu}, \dots  , \$ \; \color{red} \tau_{\color{black}\# \color{red} \rho} \color{black}  \; \$^{\mathcal{A}}_{\nu} ) \in \color{red} \rho\color{black}^{\mathcal{A}}\).
+\item Ако \(\Lang\) е с формално равенство и \(\color{red} \tau \color{black} \in Term_\Lang\) и \(\color{red} \gamma \color{black} \in Term_\Lang\), то \\
+\(\| \; \color{cyan} < \color{red} \tau \color{cyan} \doteq \color{red} \gamma \color{cyan} > \color{black} \; \|^{\mathcal{A}}_{\nu} = \text{И} \iff \$ \; \color{red} \tau \color{black} \; \$^{\mathcal{A}}_{\nu} = \$ \; \color{red} \gamma \color{black} \; \$^{\mathcal{A}}_{\nu}\).
+\item Ако \(\color{red} \varphi \color{black} \in \mathcal{F}_\Lang\), то \(\| \; \color{cyan} [ \neg \color{red} \varphi \color{cyan} ] \color{black} \; \|^{\mathcal{A}}_{\nu} = h_\neg(\| \; \color{red} \varphi \color{black} \; \|^{\mathcal{A}}_{\nu})\).
+\item Ако \(\color{red} \varphi \color{black} \in \mathcal{F}_\Lang, \color{red} \sigma \color{black} \in \{\color{cyan} \lor \color{black} , \color{cyan} \& \color{black} , \color{cyan}\implies \color{black} , \color{cyan}\iff \color{black} \}, \color{red} \psi \color{black} \in \mathcal{F}_\Lang\), то \\
+\(\| \; \color{cyan} [ \color{red} \varphi \sigma \psi \color{cyan} ] \color{black} \; \|^{\mathcal{A}}_{\nu} = Eval(\color{red} \sigma \color{black})(\| \; \color{red} \varphi \color{black} \; \|^{\mathcal{A}}_{\nu}, \| \; \color{red} \psi \color{black} \; \|^{\mathcal{A}}_{\nu})\).
+\item Ако \(\color{red} \varphi \color{black} \in \mathcal{F}_\Lang, \color{red} \chi \color{black} \in Var_\Lang\), то \\
+\(\| \; \color{cyan} [ \exists \color{red} \chi \varphi \color{cyan} ] \color{black} \; \|^{\mathcal{A}}_{\nu} = \text{И} \iff \text{съществува } a \in |\mathcal{A}| \text{ и } \| \; \color{red} \varphi \color{black} \; \|^{\mathcal{A}}_{\nu^{\color{red} \chi \color{black}}_a} = \text{И}\).
+\item Ако \(\color{red} \varphi \color{black} \in \mathcal{F}_\Lang, \color{red} \chi \color{black} \in Var_\Lang\), то \\
+\(\| \; \color{cyan} [ \forall \color{red} \chi \varphi \color{cyan} ] \color{black} \; \|^{\mathcal{A}}_{\nu} = \text{И} \iff \text{за всеки елемент } a \in |\mathcal{A}| \text{ е в сила } \| \; \color{red} \varphi \color{black} \; \|^{\mathcal{A}}_{\nu^{\color{red} \chi \color{black}}_a} = \text{И}\).
+\end{itemize}
+
+\subsection{Модел}
+
+Казваме, че структура \(\mathcal{A}\) и оценка \(\nu\) са модел за формула \(\color{red} \varphi\)
+тогава и само тогава когато \(\| \; \color{red} \varphi  \color{black}\; \|^{\mathcal{A}}_{\nu} = \text{И}\).
+Ако \(\mathcal{A}\) и оценка \(\nu\) са модел за \(\color{red} \varphi\), то  ще го означаваме с \(\mathcal{A} \underset{\nu}{\models} \color{red} \varphi\).
+
+\subsection{Примери}
+
+Нека проверим дали структурата и оценката от примера, който разглеждаме са модели за:
+\begin{itemize}
+\item \(\color{cyan} < x \doteq y > \);
+\item \(\color{cyan} [ \exists z < f(x, z) \doteq a > ] \);
+\item \(\color{cyan} [\exists x \; [ \forall y \; [ \exists z < f(y, z) \doteq x >] ]]\)
+\end{itemize}
+
+\subsubsection{Формула 1}
+\(\| \; \color{cyan} < x \doteq y > \color{black}\; \|^{\mathcal{A}}_{\nu} = \text{И} \iff \$ \; \color{cyan} x \color{black} \; \$^{\mathcal{A}}_{\nu} = \$ \; \color{cyan} y \color{black} \; \$^{\mathcal{A}}_{\nu} \iff 3 = -5 \iff \text{Л} \),
+Следователно \(\mathcal{A}\) и \(\nu\) не са модел.
+
+\subsubsection{Формула 2}
+\begin{align*}
+\| \; \color{cyan} [ \exists z < f(x, z) \doteq a > ] \color{black}\; \|^{\mathcal{A}}_{\nu} = \text{И} \iff \\
+\text{ същесвува } \alpha \in \mathbb{Z} \text{ и } \| \; \color{cyan} < f(x, z) \doteq a > \color{black}\; \|^{\mathcal{A}}_{\nu^{\color{cyan} z \color{black}}_\alpha}  = \text{И} \iff \\
+\text{ същесвува } \alpha \in \mathbb{Z} \text{ и } \$ \; \color{cyan} f(x, z) \color{black}\; \$^{\mathcal{A}}_{\nu^{\color{cyan} z \color{black}}_\alpha} = \$ \; \color{cyan} a \color{black}\; \$^{\mathcal{A}}_{\nu^{\color{cyan} z \color{black}}_\alpha} \iff \\
+\text{ същесвува } \alpha \in \mathbb{Z} \text{ и } 3 + \alpha = 0 \iff \\
+3 + (-3) = 0 \iff \text{И}
+\end{align*}
+
+Тоест избирайки \(\alpha = -3\) получаваме истина, което означава че същесвува елемент \(\alpha\) с желаното свойство.
+Следователно \(\mathcal{A} \underset{\nu}{\models} \color{cyan} [ \exists z < f(x, z) \doteq a > ]\)
+
+\subsubsection{Формула 3}
+Проверете сами, че \(\mathcal{A} \underset{\nu}{\models} \color{cyan} [\exists x \; [ \forall y \; [ \exists z < f(y, z) \doteq x >] ]]\).  =)
+
+\end{document}
