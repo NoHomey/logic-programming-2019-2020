@@ -1,0 +1,355 @@
+\documentclass{article}[12pt]
+\usepackage{amsmath,amsthm}
+\usepackage{amssymb}
+\usepackage{lipsum}
+\usepackage{stmaryrd}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[bulgarian]{babel}
+\usepackage[normalem]{ulem}
+\usepackage{xcolor}
+
+\newcommand{\Lang}{\mathcal{L}}
+
+\setlength{\parindent}{0mm}
+
+\title{Определимост}
+\author{Иво Стратев}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+
+Нека първо кажем какво ще разбираме под определимост
+
+\section{Определимост}
+
+Ще дефинираме серия от изображения, които да ни помогнат формално да въведем понятието определимост.
+
+\subsection{Променливи участващи в терм}
+
+Дефинираме изображение \(varsInTerm \; : \; Term_\Lang \to \mathcal{P}(Var_\Lang)\),
+което на всеки терм съпоставя множеството от участващите в него променливи.
+
+Действащо по следните правила:
+
+\begin{itemize}
+\item \((\forall \color{red} \chi \color{black} \in Var_\Lang)[varsInTerm(\color{red} \chi \color{black}) = \{\color{red} \chi \color{black}\}]\) (единствената променлива участваща в терм, който е променлива е самата променлива);
+\item \((\forall \color{red} c \color{black} \in Const_\Lang)[varsInTerm(\color{red} c \color{black}) = \emptyset]\) (не участват променливи в терм, който представлява константен символ);
+\item Ако \(\color{red} \delta \color{black} \in Func_\Lang\) и \(\color{red}\tau_1\) е терм, \(\dots\), \(\color{red}\tau_{\color{black}\#\color{red}\delta}\) е терм, то \\
+\(varsInTerm(\color{red} \delta \color{cyan} (\color{red}\tau_1 \color{cyan} , \color{black} \dots \color{cyan} , \color{red} \tau_{\color{black}\#\color{red}\delta} \color{cyan} ) \color{black}) = \displaystyle\bigcup_{i = 1}^{\color{black}\#\color{red}\delta \color{black}} varsInTerm(\color{red} \tau_{\color{black} i } \color{black} )\). \\
+(Променливите участващи във "функционален" \; терм са променливите участващи в "аргументите" ).
+\end{itemize}
+
+\subsubsection{Пример}
+
+\begin{align*}
+varsInTerm(\color{cyan} f(x, g(y, x))  \color{black}) = \\
+varsInTerm(\color{cyan} x \color{black}) \cup varsInTerm(\color{cyan} g(y, x) \color{black}) = \\
+\{\color{cyan} x \color{black}\} \cup (varsInTerm(\color{cyan} y \color{black}) \cup varsInTerm(\color{cyan} x \color{black})) = \\
+\{\color{cyan} x \color{black}\} \cup (\{\color{cyan} y \color{black}\} \cup \{\color{cyan} x \color{black}\}) = \\
+\{\color{cyan} x \color{black}\} \cup \{\color{cyan} y \color{black} , \color{cyan} x \color{black}\} = \\
+\{\color{cyan} x \color{black} , \color{cyan} y \color{black} , \color{cyan} x \color{black}\} = \\
+\{\color{cyan} x \color{black} , \color{cyan} y \color{black} \}
+\end{align*}
+
+\subsection{Свободни променливи на формула}
+
+Дефинираме изображение (индуктивно) \(freeVars \; : \; \mathcal{F}_\Lang \to \mathcal{P}(Var_\Lang)\),
+което на всяка формула съпоставя множеството от свободно участващите в нея променливи.
+
+Действащо по следните правила:
+
+\begin{itemize}
+\item Ако \(\color{red}\rho \color{black} \in Pred_\Lang\) и \(\color{red}\tau_1\), \(\dots\), \(\color{red}\tau_{\color{black}\#\color{red}\rho}\) са термове, то \\
+\(freeVars(\color{red}\rho \color{cyan} < \color{red} \tau_1 \color{cyan} , \color{black} \dots \color{cyan} , \color{red} \tau_{\color{black}\#\color{red}\rho} \color{cyan} > \color{black}) = \displaystyle\bigcup_{i = 1}^{\color{black}\#\color{red}\rho \color{black}} varsInTerm(\color{red} \tau_{\color{black} i } \color{black} )\) \\
+(В атомарна формула всяка участваща променлива е свободна, а участващите са променливите от термовете);
+\item  Ако \(\Lang\) е с формално равенство и \(\color{red} \alpha\) е терм и \(\color{red} \beta\) е терм, то \\
+\(freeVars(\color{cyan} < \color{red} \alpha \color{cyan} \doteq \color{red} \beta \color{cyan} > \color{black}) = varsInTerm(\color{red} \alpha \color{black}) \cup varsInTerm(\color{red} \beta \color{black})\);
+\item Ако \(\color{red} \varphi\) е формула,
+то \(freeVars(\color{cyan} [ \neg \color{red} \varphi \color{cyan} ] \color{black}) = freeVars(\color{red} \varphi \color{black})\);
+\item Ако \(\color{red} \varphi\) е формула,
+\(\color{red} \psi\) е формула и \(\color{red} \sigma \color{black} \in \{\color{cyan} \lor \color{black} , \color{cyan} \& \color{black} , \color{cyan}\implies \color{black} , \color{cyan}\iff \color{black} \}\), то \\
+\(freeVars(\color{cyan} [ \color{red} \varphi \sigma \psi \color{cyan} ] \color{black}) = freeVars(\color{red} \varphi \color{black}) \cup freeVars(\color{red} \psi \color{black})\);
+\item Ако \(\color{red} \varphi\) е формула, \(\color{red} \chi \color{black} \in Var_\Lang\) и \(\color{red} \Lambda \color{black} \in \{\color{cyan} \exists \color{black} , \color{cyan} \forall \color{black} \}\), то \\
+\(freeVars(\color{cyan} [ \color{red} \Lambda \chi \varphi \color{cyan} ] \color{black}) = freeVars(\color{red} \varphi \color{black}) \setminus \{\color{red} \chi \color{black}\}\). \\
+(Ако формулата е кванторна, то свободните променливи са свободните променливи на подформулата след променливата без самата променлива (тя участва свързано / под квантор) ).
+\end{itemize}
+
+\subsubsection{Пример}
+
+\begin{align*}
+freeVars(\color{cyan} [p<x, x> \implies [\forall x \; p<x, y>] ] \color{black}) = \\
+freeVars(\color{cyan} p<x, x> \color{black}) \cup freeVars(\color{cyan} [\forall x \; p<x, y>] \color{black}) = \\
+(varsInTerm(\color{cyan} x \color{black}) \cup varsInTerm(\color{cyan} x \color{black})) \cup (freeVars(\color{cyan} p<x, y> \color{black}) \setminus \{\color{cyan} x \color{black}\}) = \\
+\{\color{cyan} x \color{black}\} \cup ((varsInTerm(\color{cyan} x \color{black}) \cup varsInTerm(\color{cyan} y \color{black})) \setminus \{\color{cyan} x \color{black}\}) = \\
+\{\color{cyan} x \color{black}\} \cup (\{\color{cyan} x \color{black}, \color{cyan} y \color{black}\} \setminus \{\color{cyan} x \color{black}\}) = \\
+\{\color{cyan} x \color{black}\} \cup \{\color{cyan} y \color{black}\} = \\
+\{\color{cyan} x \color{black}, \color{cyan} y \color{black}\}
+\end{align*}
+
+Коментар: Както се вижда от избрания пример променливата \(\color{cyan} x\) има и свободно и свързано участие (под универсален квантор) в подформули,
+но във формулата, която разглеждаме участието е свободно.
+
+\subsection{Естесвен начин за съпоставяне на функция на дадена формула}
+
+\subsubsection{Едно важно твърдение (без доказателство)}
+
+Верността (сементиката) на една формула зависи само от структурата, в която се разглежда и оценките само на свободните променливи на формулата.
+
+\vspace{1cm}
+
+Нека \(\Lang\) е език на предикатното смятане от първи ред.
+Нека \(\color{red} \varphi\) е произволна и фиксирана формула над езика \(\Lang\). Нека \(X = freeVars(\color{red} \varphi \color{black})\).
+Нека \(\mathcal{A}\) е фиксирана структура, за \(\Lang\). Нека \(\nu\) и \(\kappa\) са оценки и нека \((\forall \color{red} \chi \color{black} \in X)[\nu(\color{red} \chi \color{black}) = \kappa(\color{red} \chi \color{black})]\).
+Тогава \(\| \; \color{red} \varphi \color{black} \; \|^{\mathcal{A}}_{\nu} = \| \; \color{red} \varphi \color{black} \; \|^{\mathcal{A}}_{\kappa}\).
+
+\vspace{1cm}
+
+Както се казва, удоволствието да се докаже горното твърдение оставяме на любознателния читател.
+
+\subsubsection{Естествена функция}
+
+Нека фиксираме произволна формула \(\color{red} \varphi\).
+Нека \(X = freeVars(\color{red} \varphi \color{black})\).
+Ако \(X = \emptyset\), то случая не е интересен (за момента, понеже искаме да определяме разни неща),
+защото по горното твърдение верността на \(\color{red} \varphi\) ще зависи единствено от структурата.
+Тоест \(\color{red} \varphi\) ще е характеризация на света, а не на неговите елементи.
+За това нека \(X \neq \emptyset\). Във всяка формула може да участват краен брой променливи,
+което влече и че \(X\) е крайно множество. Нека тогава \(n = |X|\). Всяко крайно множество може да бъде наредено,
+за това нека фиксираме една наредба на елементите на \(X\): \(x_1 < \dots < x_{n}\).
+Естествена наредба на \(X\) е според реда на срещане на променливите във \(\color{red} \varphi\).
+Нека фиксираме подходяща структура \(\mathcal{A}\) и нека \(\nu\) е произволна оценка.
+Tака нека дефинираме функция: \(f \; : \; |\mathcal{A}|^n \to \{\text{И}, \text{Л}\}\) действаща по правило:
+\begin{align*}
+f(a_1, \dots, a_n) = \| \; \color{red} \varphi \color{black} \; \|^{\mathcal{A}}_{\nu^{x_1 \; x_2 \; \dots \; x_n}_{a_1 \; a_2 \; \dots \; a_n}}
+\end{align*}
+
+Тоест \(f\) пресмята верността на \(\color{red} \varphi\) в \(\mathcal{A}\) при оценка на свободните променливи на \(\color{red} \varphi\) - подадените аргументи.
+
+\vspace{1cm}
+
+Нека \(charF_\Lang = \{\varphi \; | \; \varphi \in \mathcal{F}_\Lang \; \& \; freeVars(\varphi) = \emptyset\}\).
+И Нека \\
+\(naturalFunc_{\mathcal{A}} \; : \; \mathcal{F}_\Lang \setminus charF_\Lang \to \displaystyle\bigcup_{n \in \mathbb{N}^+} \{g \; | \; g : |\mathcal{A}|^n \to \{\text{И}, \text{Л}\} \}  \).
+Която на формула имаща поне една свободна променлива съпоставя ествествената ѝ функция по горнoто обяснение.
+Като за оценка \(\nu\) можем да си мислим, че взимаме оценката, която на всяка променлива съпоставя първия аргумент на естестевената функция и след това я модифицираме.
+По твърдението няма значние каква оценка модифицираме, защото фиксираме оценката на всяка свободна променлива.
+
+\subsection{Множеството, което една формула определя}
+
+Нека \(\color{red} \varphi\) е произволна формула с поне една свободна променлива (искаме да определяме множество все пак).
+Нека \(\mathcal{A}\) е подходяща структура. Нека \(n = |freeVars(\color{red} \varphi \color{black})|\). Тогава множеството, което \(\color{red} \varphi\) определя ще бележим с \(Set_\mathcal{A}(\color{red} \varphi \color{black})\).
+И по дефиниция \(Set_\mathcal{A}(\color{red} \varphi \color{black}) = \\
+\{<a_1, \dots, a_n> \; \in |\mathcal{A}|^n \; | \; naturalFunc_{\mathcal{A}}(\color{red} \varphi \color{black})(a_1, \dots, a_n) = \text{И}\}\).
+Тоест отделяме от \(|\mathcal{A}|^n\) онези елементи, върху които естествената функция, която \(\color{red} \varphi\) определя е истина.
+
+\subsection{Определимо множество}
+Нека \(\Lang\) е език на предикатното смятане от първи ред. Нека \(\mathcal{A}\) е структура за \(\Lang\).
+Нека \(B \subseteq |\mathcal{A}|^n\) за някое \(n \in \mathbb{N}^+\).
+Казваме, че \(B\) е определимо множество ако има формула \(\color{red} \varphi\) със свойството
+\(B = Set_\mathcal{A}(\color{red} \varphi \color{black})\).
+Тоест има формула, която определя множеството \(B\).
+
+\subsection{Определимост на елемент}
+
+Нека \(\Lang\) е език на предикатното смятане от първи ред. Нека \(\mathcal{A}\) е структура за \(\Lang\).
+Нека \(a \in |\mathcal{A}|\). Казваме, че \(a\) е определим, ако има формула \(\color{red} \varphi\) със свойството
+\(\{a\} = Set_\mathcal{A}(\color{red} \varphi \color{black})\).
+Тоест елемента \(a\) е определим точно когато неговия синглетон е определимо множество.
+
+\subsection{Определимост на функция}
+Нека \(\Lang\) е език на предикатното смятане от първи ред. Нека \(\mathcal{A}\) е структура за \(\Lang\).
+Нека \(f \; : \; |\mathcal{A}|^n \to A\) за някое \(n \in \mathbb{N}^+\).
+Казваме, че \(f\) е определима функция, ако нейната графика е определимо множество.
+Тоест има формула \(\color{red} \varphi\) със свойството \(\{<a_1, \dots, a_n, b> \in |\mathcal{A}|^{n + 1} \; | \; b = f(a_1, \dots, a_n) \} = Set_\mathcal{A}(\color{red} \varphi \color{black})\).
+
+\subsection{Определимост на предикат/свойство/релация}
+Нека \(\Lang\) е език на предикатното смятане от първи ред. Нека \(\mathcal{A}\) е структура за \(\Lang\).
+Нека \(R \subseteq |\mathcal{A}|^n\) за някое \(n \in \mathbb{N}^+\).
+Казваме, че \(R\) e определим предикат/определимо свойство/определима релация/определима връзка точно когато
+\(R\) е определимо множество.
+
+\section{Няколко задачи върху определимост}
+
+Преминаваме към решаването на задачи.
+
+\subsection{Естесвени числа само с наредбата им}
+
+Нека \(\Lang\) се състой от единствен двуместен предикатен символ \(\color{cyan} p\).
+Това ще записваме така \(\Lang = <\color{cyan} p \color{black} >\).
+
+\vspace{0.5cm}
+
+Правим следната оговорка множеството на променливи се състой от латинските букви с и без индексни,
+за които не е изрично казано, че са предикатни символи, функционални или символи за константи.
+
+\vspace{0.5cm}
+Нека \(\mathcal{A}\) е структура за \(\Lang\).
+Носителя/Домейна/Универсума на \(\mathcal{A}\)
+е множеството на естествените числа. Тоест \(|\mathcal{A}| = \mathbb{N}\).
+И интерпретацията на \(\color{cyan} p\) е на релацията "по-малко".
+Тоест:
+
+\begin{align*}
+<x, y> \in \color{cyan} p^{\color{black} \mathcal{A}} \color{black} \longleftrightarrow x < y
+\end{align*}
+
+Горното условие ще записваме още така:
+
+Нека \(<\mathbb{N} \; ; \; \color{cyan} p^{\color{black} \mathcal{A}} \color{black} > \) е структура за \(\Lang\).
+
+\vspace{0.5cm}
+
+Да се докаже, че всеки елемент на \(\mathbb{N}\) е определим.
+
+\vspace{0.5cm}
+
+Ще пишем формулите два пъти с различни цветове.
+
+Със \color{cyan} син \color{black} цвят ще бъдат спрямо синтаксиса с много и различни скоби.
+
+Със \color{green} зелен \color{black} цвят ще бъдат спрямо олекотен синтакс само с кръгли скоби и въведени приоритети за намаляване на използваните скоби.
+
+Реда на оценяване е следния:
+
+\begin{enumerate}
+\item \(\neg\)
+\item \(\forall \chi, \; \exists \chi\)
+\item \(\&\)
+\item \(\lor\)
+\item \(\implies\)
+\item \(\iff\)
+\end{enumerate}
+
+Ще натоварим значението на \color{red} червения \color{black} цвят с още едно:
+синтактично заместване на формула, при което евентуално се преименуват променливи,
+така че смисъла да е този, който имаме пишейки формулата.
+По идея концепцията е същата като извикването на рекурсивна функция в езика C++,
+всяко извикване алокира памет на стека и по този начин всяка променлива е на различен адрес,
+евентуално с различни стойности.
+
+\vspace{0.5cm}
+
+Ще използваме \(\leftrightharpoons\) със смисъл "синтактично дефинираме".
+
+\vspace{0.3cm}
+
+\textbf{Решение:}
+
+\vspace{0.3cm}
+
+Нека определим първо числото \(0\).
+
+\vspace{0.3cm}
+
+Идея: Няма по-малко число от него.
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_0<\color{cyan} x \color{red}> \color{black} \; \leftrightharpoons  \color{cyan}  [\lnot [\exists y \; p<y, x>] ] \)
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_0(\color{cyan} x \color{red}) \color{black} \leftrightharpoons  \color{green}  \lnot \exists y \; p(y, x) \)
+
+\vspace{0.3cm}
+
+Очевидно горните формули са истина само когато оценката на x е 0.
+
+\vspace{0.3cm}
+
+Както можем да се досетим можем да дефинираме числото 0 като най-малкият елемент.
+Нека преди това дефинираме формула със смисъл "по-малко или равно".
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_{\leq}<\color{cyan} x \color{red} , \color{cyan} y \color{red}> \; \color{black} \leftrightharpoons  \color{cyan}  [\lnot p<y, x> ] \)
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_{\leq}(\color{cyan} x \color{red} , \color{cyan} y \color{red}) \color{black} \leftrightharpoons  \color{green}  \lnot p(y, x) \)
+
+\vspace{0.3cm}
+
+Очевидно горните формули са истина точно когато оценката на x е по-малка или равна от оценката на y.
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_0<\color{cyan} x \color{red}> \color{black} \; \leftrightharpoons \color{cyan}  [\forall y \; \color{red} \varphi_{\leq}<\color{cyan} x \color{red} , \color{cyan} y \color{red}> ] \)
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_0(\color{cyan} x \color{red}) \color{black} \leftrightharpoons \color{green}  \forall y \; \color{red}\varphi_{\leq}(\color{cyan} x \color{red} , \color{cyan} y \color{red}) \)
+
+\vspace{0.3cm}
+
+Очевидно горните формули са истина само когато оценката на x е 1.
+
+\vspace{0.3cm}
+
+Ще дадем пример за заместването, за което говорихме.
+Формулата: \\
+\(\color{cyan}  [\forall y \; \color{red} \varphi_{\leq}<\color{cyan} x \color{red} , \color{cyan} y \color{red}> ] \).
+По същество представлява:
+\(\color{cyan}  [\forall y \; [\lnot \; p<y, x> ] ] \).
+
+\vspace{0.3cm}
+
+След като имаме формула за 0, то по аналогичен начин можем да дефинираме 1.
+Като най-малкото естесвено число, което е по-голямо от 0.
+Но за да кажем по-голямо от 0, то ще трябва да въведем "временна променлива",
+за която да кажем, че е 0 (да я инициализираме с 0). Това става по-следния начин:
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_1<\color{cyan} x \color{red}> \color{black} \; \leftrightharpoons \color{cyan}  [\exists y \; [\color{red} \varphi_0<\color{cyan} y \color{red}> \color{cyan} \& \; [p<y, x> \& \; [\forall z \; [p<y, z> \implies \color{red} \varphi_\leq< \color{cyan} x \color{red} , \color{cyan} z \color{red}  > \color{cyan} ]]  ]]] \)
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_1(\color{green} x \color{red}) \color{black} \; \leftrightharpoons \color{green}  \exists y \; (\color{red} \varphi_0(\color{green} y \color{red}) \color{green} \; \& \; p(y, x) \; \& \; \forall z \; (p(y, z) \implies \color{red} \varphi_\leq( \color{green} x \color{red} , \color{green} z \color{red} ) \color{green} )) \)
+
+\vspace{0.3cm}
+
+По-аналогичен начин можем да определим  2: като най-малкото число, което е по-голямо от 1.
+
+\vspace{0.3cm}
+
+Ясно се вижда, че с индукция по естествените числа можем да определим всяко. Нека го направим
+
+\vspace{0.3cm}
+
+База: базовия случай е да напишем формула, с която да определим 0, но ние вече имаме такава.
+
+\vspace{0.3cm}
+
+Индукционна хипотеза: За някое естествено число \(n\) имаме формула \(\color{red} \varphi_n\).
+
+\vspace{0.3cm}
+
+Индукционна стъпка: ще напишем формула, която определя \(n + 1\).
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_{n + 1}<\color{cyan} x \color{red}> \color{black} \; \leftrightharpoons \\ \color{cyan}  [\exists y \; [\color{red} \varphi_n<\color{cyan} y \color{red}> \color{cyan} \& \; [p<y, x> \& \; [\forall z \; [p<y, z> \implies \color{red} \varphi_\leq< \color{cyan} x \color{red} , \color{cyan} z \color{red}  > \color{cyan} ]]  ]]] \)
+
+\vspace{0.3cm}
+
+\(\color{red} \varphi_{n + 1}(\color{green} x \color{red}) \color{black} \; \leftrightharpoons \color{green}  \exists y \; (\color{red} \varphi_n(\color{green} y \color{red}) \color{green} \; \& \; p(y, x) \; \& \; \forall z \; (p(y, z) \implies \color{red} \varphi_\leq( \color{green} x \color{red} , \color{green} z \color{red} ) \color{green} )) \)
+
+\subsection{Естествени числа само с графика на умножение}
+
+Нека \(\Lang = <p>\) е език състоящ се от единствен триместен предикатен символ.
+
+Нека \(S = <\mathbb{N} \; ; \; p^S>\) е структура за \(\Lang\). Където:
+
+\begin{align*}
+<x, y, z> \; \in p^S \longleftrightarrow z = x.y
+\end{align*}
+
+
+\end{document}
