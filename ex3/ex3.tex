@@ -1,0 +1,95 @@
+\documentclass{article}[12pt]
+\usepackage{amsmath,amsthm}
+\usepackage{amssymb}
+\usepackage{lipsum}
+\usepackage{stmaryrd}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[bulgarian]{babel}
+\usepackage[normalem]{ulem}
+\usepackage{xcolor}
+
+\newcommand{\Lang}{\mathcal{L}}
+
+\setlength{\parindent}{0mm}
+
+\title{Неопределимост}
+\author{Иво Стратев}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+
+\section{Хомоморфизъми}
+
+\subsection{Слаб хомоморфизъм}
+
+Нека \(\Lang\) е език на предикатното смятане от първи ред.
+Нека \(\mathcal{A}\) и \(\mathcal{B}\) са две структури за \(\Lang\).
+Нека \(h \; : \; |\mathcal{A}| \to |\mathcal{B}|\). \\
+\(h\) е слаб хомоморфизъм (\(h \in WeakHom(\mathcal{A}, \mathcal{B})\)),
+ако
+
+\begin{itemize}
+\item \((\forall c \in Const_\Lang)[h(c^\mathcal{A}) = c^\mathcal{B}]\);
+\item \((\forall f \in Func_\Lang)(\forall a_1 \in |\mathcal{A}|)\dots(\forall a_{\#f} \in |\mathcal{A}|)
+[\; h(f^\mathcal{A}(a_1, \dots, a_{\#f})) = f^\mathcal{B}(h(a_1), \dots, h(a_{\#f}))\;]\);
+\item \((\forall p \in Pred_\Lang)(\forall a_1 \in |\mathcal{A}|)\dots(\forall a_{\#p} \in |\mathcal{A}|) \newline
+[<a_1, \dots, a_{\#p}> \; \in p^\mathcal{A} \longrightarrow <h(a_1), \dots, h(a_{\#p})> \; \in p^\mathcal{B}]\);
+\end{itemize}
+
+Накратко слабия хомоморфизъм запазва операциите (функциите) и запазва истинността на свойствата/връзките/релациите.
+
+\subsection{Рефлектиращ хомоморфизъм или просто хомоморфизъм}
+
+Нека \(\Lang\) е език на предикатното смятане от първи ред.
+Нека \(\mathcal{A}\) и \(\mathcal{B}\) са две структури за \(\Lang\).
+Нека \(h \; : \; |\mathcal{A}| \to |\mathcal{B}|\). \\
+\(h\) е рефлектиращ (reflective) хомоморфизъм (\(h \in Hom(\mathcal{A}, \mathcal{B})\)),
+ако
+
+\begin{itemize}
+\item \((\forall c \in Const_\Lang)[h(c^\mathcal{A}) = c^\mathcal{B}]\);
+\item \((\forall f \in Func_\Lang)(\forall a_1 \in |\mathcal{A}|)\dots(\forall a_{\#f} \in |\mathcal{A}|)
+[\; h(f^\mathcal{A}(a_1, \dots, a_{\#f})) = f^\mathcal{B}(h(a_1), \dots, h(a_{\#f}))\;]\);
+\item \((\forall p \in Pred_\Lang)(\forall a_1 \in |\mathcal{A}|)\dots(\forall a_{\#p} \in |\mathcal{A}|) \newline
+[<a_1, \dots, a_{\#p}> \; \in p^\mathcal{A} \longleftrightarrow \; <h(a_1), \dots, h(a_{\#p})> \; \in p^\mathcal{B}]\);
+\end{itemize}
+
+Забележа: Разликата е в последното свойство.
+
+Накратко рефлектиращ хомоморфизъм или просто хомоморфизъм е слаб хомоморфизъм,
+който запазва и лъжата (неистинността) на свойствата/връзките/релациите.
+
+\subsection{Изоморфизъм}
+
+Изоморфизъм е хомоморфизъм, който е и биекция!
+
+\subsection{Автоморфизъм}
+
+Автоморфизъм е изоморфизъм на една структура в себе си.
+Но тъйкато понятието за нас е с особена важност ще го напишем!
+
+\vspace{1cm}
+
+Нека \(\Lang\) е език на предикатното смятане от първи ред.
+Нека \(\mathcal{A}\) е структура за \(\Lang\).
+Нека \(h \; : \; |\mathcal{A}| \to |\mathcal{A}|\). \\
+\(h\) е автоморфизъм (\(h \in Aut(\mathcal{A})\)),
+ако \(h\) е биекция и още:
+
+\begin{itemize}
+\item \((\forall c \in Const_\Lang)[h(c^\mathcal{A}) = c^\mathcal{A}]\);
+\item \((\forall f \in Func_\Lang)(\forall a_1 \in |\mathcal{A}|)\dots(\forall a_{\#f} \in |\mathcal{A}|)
+[\; h(f^\mathcal{A}(a_1, \dots, a_{\#f})) = f^\mathcal{A}(h(a_1), \dots, h(a_{\#f}))\;]\);
+\item \((\forall p \in Pred_\Lang)(\forall a_1 \in |\mathcal{A}|)\dots(\forall a_{\#p} \in |\mathcal{A}|) \newline
+[<a_1, \dots, a_{\#p}> \; \in p^\mathcal{A} \longleftrightarrow \; <h(a_1), \dots, h(a_{\#p})> \; \in p^\mathcal{A}]\);
+\end{itemize}
+
+Забелжка: в сила е \(\{id_{|\mathcal{A}|}\} \subseteq Aut(\mathcal{A})\).
+
+\end{document}
