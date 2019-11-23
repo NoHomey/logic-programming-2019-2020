@@ -41,4 +41,16 @@ Example:
 
 # Task 4
 
-Reimplem
+Implemnt `member(X, L)` using `append`.
+
+# Task 5
+
+Implemnet `reverse(X, Y)` with the following semantic `Y` is the reverse of `X`.
+
+Examples:
+
+`?- reverse([a, b, c], [c, b, a]).` answer: `true`.
+
+`?- reverse([a, b, c], X).` answer: `X = [c, b, a]`.
+
+`?- reverse(X, [c, b, a]).` answer: `X = [a, b, c]`.
