@@ -239,3 +239,19 @@ partition([], []).
 % To partition L we first split it on two P and S such that L = P.S
 % we partition S and use it to construct partition of L.
 partition(L, [P|T]) :- append(P, S, L), P \= [], partition(S, T).
+
+% $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+% Task 10. Write predicate that finds the minimum of list of integers.
+
+% Solution 1. Recursive
+
+minimum([X], X).
+minimum([H|T], M) :- minimum(T, S), min(H, S, M).
+
+min(A, B, A) :- A =< B.
+min(A, B, B) :- B < A.
+
+% Solution 2. not
+
+minimum(L, M) :- member(M, L), not((member(X, L), X < M)).
