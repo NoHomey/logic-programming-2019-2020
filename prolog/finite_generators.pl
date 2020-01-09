@@ -226,6 +226,8 @@ task8_3(L, K) :-
     list_length(M, K), % with length K
     not((list_trans(L, T), list_length(T, S), S < K)),
     !. % stop we have found the length of each minimal transversal :)
+  
+% $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
           
 % Task 9. Write predicate partition(L. R) wich when given list L generates in R (one by one)
 % each partition of L such that if we concatenate all the elements of R we get L.
