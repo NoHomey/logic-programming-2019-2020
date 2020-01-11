@@ -14,7 +14,7 @@ mod(R, N, K) :- N >= K, NK is N - K, mod(R, NK, K).
 list_length(0, []).
 list_length(N, [_|T]) :- list_length(T, M), N is M + 1.
 
-elment_at(E, 0, [E | _ ]).
+element_at(E, 0, [E | _ ]).
 element_at(E, N, [_ | T]) :- N > 0, N1 is N - 1, element_at(E, N1, T). 
 
 is_sorted([]).
