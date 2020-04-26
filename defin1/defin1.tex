@@ -1,0 +1,181 @@
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage[T2A]{fontenc}
+\usepackage[english,bulgarian]{babel}
+\def\frak#1{\cal #1}
+
+\usepackage{amssymb,amsmath}
+\usepackage{graphicx}
+\usepackage{shuffle}
+\usepackage{alltt}
+\usepackage{enumerate}
+\newtheorem{theorem}{Теорема}%[section]
+\newtheorem{problem}{Задача}%[section]
+\newtheorem{remark}{{Забележка}}%[section]
+\newtheorem{example}{Пример}%[section]
+\newtheorem{lemma}{{Лема}}%[section]
+\newtheorem{proposition}{Твърдение}%[section]
+\def\proof{\textbf {Доказателство: }}%[section]
+\newtheorem{corollary}{Следствие}%[section]
+\newtheorem{fact}{Факт}%[
+\newtheorem{definition}{Дефиниция}%[section]
+\begin{document}
+
+\section*{Задачи за (Не)Определимост №1}
+
+\begin{problem}[Числа на Фибоначи]
+Редицата $\{F_n\}_{n=0}^{\infty}$ се дефинира така:
+\begin{equation*}
+F_0=0, F_1=1\text{ и } F_{n+2}=F_{n+1}+F_n \text{ за } n\ge 0.
+\end{equation*}
+
+Разглеждаме език ${\cal L}$ без формално равенство и единствени нелогически символи:
+двуместен функционален символ $f$ и едноместен предикатен символ  $p$. 
+
+${\cal S}$ е структурата за езика ${\cal L}$ с носител $\mathbb{N}$ и интерпретации на нелогическите символи:
+\begin{eqnarray*}
+f^{\cal S}(x,y) =z \overset{def}{\longleftrightarrow} x+F_{y+1}=z\\
+p^{\cal S}(x) \overset{def}{\longleftrightarrow} x\in \{F_n\}_{n=0}^{\infty}.
+\end{eqnarray*}
+Да се докаже, че в структурата ${\cal S}$ са определими:
+\begin{enumerate}
+\item $\{0\}$.
+\item $\{1\}$.
+\item $Eq=\{(a,a)\,|\, a\in \mathbb{N}\}$.
+\end{enumerate}
+Вярно ли е, че в ${\cal S}$ е определимо множеството:
+\begin{equation*}
+Prev=\{(F_n,F_{n+1})\,|\, n\in \mathbb{N}\}?
+\end{equation*}
+Да се намерят с доказателство автоморфизмите на стуктурата ${\cal S}$.
+\end{problem}
+
+\begin{problem}[Комплексни числа]
+Разглеждаме език \(\mathcal{L} = <p, q>\) от два двумесни предикатни символа.
+Нека \(\mathcal{S} = <\mathbb{C}; \; p^\mathcal{S}, q^\mathcal{S}>\) е структура за \(\mathcal{L}\). Където:
+\begin{eqnarray*}
+    <x, y> \; \in p^\mathcal{S} \overset{def}{\longleftrightarrow} y = ix \\
+    <x, y> \; \in q^\mathcal{S} \overset{def}{\longleftrightarrow} y = x^3 + i
+\end{eqnarray*}
+
+Да са определят следните множества:
+
+\vspace{0.5cm}
+
+а) \(\{0\}\) и \(\{1\}\);
+
+\vspace{0.5cm}
+
+б) \(\{x \; | \; x \in \mathbb{C} \; \& \; x^2 = -1\}\) и \(\{x \; | \; x \in \mathbb{C} \; \& \; x^4 = 1\}\);
+
+\vspace{0.5cm}
+
+в) \(\{x \; | \; x \in \mathbb{C} \; \& \; x^3 = 1\}\);
+
+\vspace{0.5cm}
+
+г) \(\{<x, y> \; | \; x \in \mathbb{C} \; \& \; y \in \mathbb{C} \; \& \; y = x^3 + 1\}\);
+
+\vspace{0.5cm}
+
+д) \(\{2\}\) и \(\{9\}\);
+
+\vspace{0.5cm}
+
+е) \(\{<9, i>\}\);
+
+\vspace{0.5cm}
+
+ж) \(\{x \; | \; x \in \mathbb{C} \; \& \; x^3 - 2x^2 - x = -2\}\);
+
+\vspace{0.5cm}
+
+з) \(\{-2 + 3i\}\);
+\end{problem}
+
+\begin{problem}[Функции]
+
+Разглеждаме език \(\mathcal{L} = <nat, result>\) състоящ се от два предикатни символа.
+\(nat\) е едноместен, a \(result\) е четириместен.
+
+Нека \(\mathbb{F} = \{f \; | \; f \; : \; \mathbb{N} \to \displaystyle{2^{\mathbb{N}^2}}\}\).
+
+Нека \(\mathcal{S} = <\mathbb{N} \cup \mathbb{F} \; ; \; nat^\mathcal{S}, result^\mathcal{S} >\) е структура за \(\mathcal{L}\).
+
+Където:
+\begin{eqnarray*}
+x \in nat^\mathcal{S} \overset{def}{\longleftrightarrow} x \in \mathbb{N} \\
+<f, x, y, z> \; \in result^\mathcal{S} \overset{def}{\longleftrightarrow} f \in \mathbb{F} \; \& \; <x, y, z> \; \in \mathbb{N}^3 \; \& \; <y, z> \; \in f(x) 
+\end{eqnarray*}
+
+Ще използваме следния запис: \([\; x \mapsto \text{израз} \; ]\) за да означаваме елемента на \(\mathbb{F}\), който на \(x\) съпоставя израза "израз". \\
+
+а) Да се определят множествата:
+\begin{enumerate}
+\item \(\{ f \; | \; f \in \mathbb{F} \; \& \; f = [\;x \mapsto \emptyset\;] \}\);
+
+\item \(\{ f \; | \; f \in \mathbb{F} \; \& \; f = [\;x \mapsto \mathbb{N}^2\;] \}\);
+
+\item \(\{ <f, g, h> \; | \; <f, g, h> \; \in \mathbb{F}^3 \; \& \; h = [\;x \mapsto f(x) \cup g(x)\;]\}\);
+
+\item \(\{ <f, g, h> \; | \; <f, g, h> \; \in \mathbb{F}^3 \; \& \; h = [\;x \mapsto f(x) \cap g(x)\;]\}\);
+
+\item \(\{<f, f> \; | \; f \; \in \mathbb{F} \}\);
+
+\item \(\{<f, g> \; | \; <f, g> \; \in \mathbb{F}^2 \; \& \; (\forall x \in \mathbb{N}) \; f(x) \subseteq g(x) \}\);
+
+\item \(\{ <f, g, h> \; | \; <f, g, h> \; \in \mathbb{F}^3 \; \& \; h = [\;x \mapsto f(x) \setminus g(x)\;]\}\);
+
+\item \(\{f \; | \; f \in \mathbb{F} \; \& \; (\exists n \in \mathbb{N}) \; f = [x \mapsto \{(n, n)\}] \}\);
+
+\item \(\{f \; | \; f \in \mathbb{F} \; \& \; (\exists n \in \mathbb{N})(\exists m \in \mathbb{N}) \; (n \neq m \; \& \; f = [x \mapsto \{(n, n), (m, m)\}] )\}\);
+
+\item \(\{<f, g, h> \; | \; <f, g, h> \; \in \mathbb{F}^3 \; \& \; (\forall <x, y, z> \; \in \mathbb{N}^3) \\
+<y, z> \; \in h(x) \longleftrightarrow (\exists <u, t> \; \in f(x)) \; <y, z> \; \in g(u) \cup g(t) \}\).
+\end{enumerate}
+
+б) Да се докаже, че точно два елемента на домейна/универсума/носителя на \(\mathcal{S}\)) са определими.
+    
+\end{problem}
+
+\begin{problem}["Ориентирани графи" \; над фиксирано множество от върхове]
+
+Разглеждаме език \(\mathcal{L} = <node, edge>\) състоящ се от два предикатни символа.
+\(node\) е едноместен, а \(edge\) триместен. 
+Нека \(\mathbb{V} = \{1, 2, \dots 2019\}\).
+Нека \(\mathbb{G} = 2^{\mathbb{V}^2}\)
+Разглеждаме следната структура \(\mathcal{S} = <\mathbb{V} \cup \mathbb{G} \; ; \; node^\mathcal{S}, edge^\mathcal{S}>\) за \(\mathcal{L}\).
+
+Където:
+
+\begin{eqnarray*}
+x \in node^S \overset{def}{\longleftrightarrow} x \in \mathbb{V} \\
+<x, g, y> \; \in edge^S \overset{def}{\longleftrightarrow} g \in \mathbb{G} \; \& \; <x, y> \; \in g
+\end{eqnarray*}
+
+a) Да се определят следните множества:
+
+\begin{enumerate}
+\item \(\emptyset\);
+\item \(\{\emptyset\}\);
+\item \(\mathbb{V}^2\);
+\item \(\{<g, r, h> \; | \; <g, r, h> \; \in \mathbb{G}^3 \; \& \; h = g \cup r \}\);
+\item \(\{<g, r, h> \; | \; <g, r, h> \; \in \mathbb{G}^3 \; \& \; h = g \cap r \}\);
+\item \(\{ <g, g> \; | \; g \in \mathbb{G} \}\);
+\item \(\{ <v, v> \; | \; v \in \mathbb{V} \}\);
+\item \(\{ <x, x> \; | \; x \in \mathbb{V} \cup \mathbb{G} \}\);
+\item \(\{<g, h> \; | \; <g, h> \; \in \mathbb{G}^2 \; \& \; g \subseteq h \}\);
+\item \(\{<g, h> \; | \; <g, h> \; \in \mathbb{G}^2 \; \& \; h = \mathbb{V}^2 \setminus g \}\);
+\item \(\{ \{<n, n>\} \; | \; n \in \mathbb{V} \}\);
+\item \(\{ \{<n, n>, <m, m>\} \; | \; <n, m> \; \in \mathbb{V}^2 \}\);
+\item \(\{ \{<n, m>\} \; | \; <n, m> \; \in \mathbb{V}^2 \}\);
+\item \(\{ \{<n, m>, <m, k>\} \; | \; <n, m, k> \; \in \mathbb{V}^3 \}\);
+\item \(\{ \{<n, m>, <m, k>, <k, n>\} \; | \; <n, m, k> \; \in \mathbb{V}^3 \}\).
+\end{enumerate}
+
+б) Да се докаже, че точно два елемента на домейна/универсума/носителя на \(\mathcal{S}\) са определими.
+\end{problem}
+\end{document}
