@@ -1,0 +1,30 @@
+digraph nat_2 {
+    0 [label="nat(2)", color="blue"]
+    2 [label="nat(N0) :- nat(K0), N0 is K0 + 1", color="yellow"]
+    3 [label="nat(2) :- nat(K0), 2 is K0 + 1"]
+    4 [label="nat(K0)", color="blue"]
+    7 [label="2 is K0 + 1", fillcolor="cyan", shape="diamond", style="filled"]
+    9 [label="nat(N1) :- nat(K1), N1 is K1 + 1", color="yellow"]
+    10 [label="nat(K0) :- nat(K1), K0 is K1 + 1"]
+    11 [label="nat(K1)", color="blue"]
+    12 [label="nat(0)", color="green"]
+    13 [label="K1 = 0", color="purple", shape="box"]
+    14 [label="K0 is K1 + 1", fillcolor="cyan", shape="diamond", style="filled"]
+    15 [label="K0 is 0 + 1", color="green"]
+    16 [label="K0 = 1", color="purple", shape="box"]
+    17 [label="2 is 1 + 1", color="green"]
+
+    0 -> 2
+    2 -> 3
+    3 -> 4
+    3 -> 7
+    4 -> 9
+    9 -> 10
+    10 -> 11
+    11 -> 12
+    12 -> 13
+    10 -> 14
+    14 -> 15
+    15 -> 16
+    7 -> 17
+}

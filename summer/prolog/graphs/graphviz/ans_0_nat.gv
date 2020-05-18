@@ -1,0 +1,8 @@
+digraph ans_0_nat {
+    0 [label="nat(X)", color="blue"]
+    1 [label="nat(0)", color="green"]
+    29 [label="X = 0", color="purple", shape="box"]
+
+    0 -> 1
+    1 -> 29
+}
