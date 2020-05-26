@@ -41,4 +41,3 @@ gen_pair_of_ints(A, B) :-
 
 int(N, Z) :- N mod 2 =:= 0, Z is N div 2.
 int(N, Z) :- N mod 2 =:= 1, Z is -((N - 1) div 2) - 1.
-
