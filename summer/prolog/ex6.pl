@@ -72,3 +72,78 @@ gcd(A, B, D) :-
 is_graph([V , E]) :-
     not((append(_, [A, B | _] , V), A >= B)),
     not((member(X, V), member(Y, V), member([X, Y], E), not((X < Y, not(member([Y, X], E)))))).
+
+
+% [1, 2, 3, 4, 5] -> 1, 2, 3, 4, 5
+% or 
+% [1, 2, 3, 4, 5] -> 1, 3, 5, 2, 4 
+
+is_hamiltonian([V, E]) :-
+    permutate(V, [Start | Rest]),
+    check_path([V, E], [Start | Rest]),
+    last_in_list([Start | Rest], End),
+    edge([V, E], [End, Start]).
+
+last_in_list(L, X) :- append(_, [X], L).
+
+edge([_, E], [X, Y]) :- X < Y, member([X, Y], E).
+edge([_, E], [X, Y]) :- X > Y, member([Y, X], E).
+
+permutate([], []).
+permutate([H | T], P) :- permutate(T, Q), insert(H, Q, P).
+
+insert(X, L, R) :- append(P, S, L), append(P, [X | S], R).
+
+check_path([_, _], [_]).
+check_path([V, E], [X, Y | Rest]) :-
+    check_path([V, E], [Y | Rest]),
+    edge([V, E], [X, Y]).
+
+% gen_nat_graph(G) -> G = [V, E] is graph and V is finite subset of naturals
+
+% [ [1, 2], [] ] is isom. with [ [100, 399], [] ]
+
+% for vertecies we have [1, 2, ..., N] for some postive N
+
+gen_nat_graph([V, E]) :-
+    nat(N), N > 0,
+    range(1, N, V),
+    gen_all_edges(V, All),
+    subset(E, All).
+
+
+% range(A, B, L) -> L = [A, A + 1, ..., B]
+range(A, B, []) :- A > B.
+range(A, B, [A | R]) :- A =< B, A1 is A + 1, range(A1, B, R).
+
+subset([], []).
+subset(S , [_ | T]) :- subset(S, T).
+subset([H | S] , [H | T]) :- subset(S, T).
+
+% [1, 2, 3, 4] ->
+% 1: [1, 2], [1, 3], [1, 4]
+% 2: [2, 3], [2, 4]
+% 3: [3, 4]
+% 4: [] 
+% appendAll -> [ [1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4] ]
+% V = 1, VS = [2, 3, 4]
+% [[1, 2], [1, 3], [1, 4]] . [ [2, 3], [2, 4], [3, 4] ]
+
+gen_all_edges([], []).
+gen_all_edges([V | VS], All) :-
+    gen_all_edges_for_vertex([V | VS], LV),
+    gen_all_edges(VS, R),
+    append(LV, R, All).
+
+gen_all_edges_for_vertex([_], []).
+gen_all_edges_for_vertex([H | T ], L) :-
+    T \= [],
+    insert_first_to_all(H, T, L).
+
+insert_first_to_all(_, [], []).
+insert_first_to_all(X, [H | T], [ [X, H] | R ]) :-
+    insert_first_to_all(X, T, R).
+
+gen_nat_ham_graph(G) :-
+    gen_nat_graph(G),
+    is_hamiltonian(G).
